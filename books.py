@@ -178,7 +178,7 @@ def app():
             the_book = session.query(Book).filter(Book.id == id_choice).first()
             print(f'''
             \n{the_book.title} by {the_book.author}
-            \rPublished: {the_book.published_date}
+            \rPublished: {the_book.publish_date}
             \rPrice: ${the_book.price / 100}
             ''')
             input('\nPress enter to return to the main menu.')
@@ -186,7 +186,7 @@ def app():
             if sub_choice == '1':
                 the_book.title = edit_check('Title', the_book.title)
                 the_book.author = edit_check('Author', the_book.author)
-                the_book.published_date = edit_check('Date', the_book.published_date)
+                the_book.publish_date = edit_check('Date', the_book.publish_date)
                 the_book.price = edit_check('Price', the_book.price)
                 session.commit()
                 print('Book Updated!')
@@ -197,7 +197,18 @@ def app():
                 print('Book Deleted!')
                 time.sleep(1.5)
         elif choice == '4':
-            pass
+            oldest_book = session.query(Book).order_by(Book.publish_date).first()
+            newest_book = session.query(Book).order_by(Book.publish_date.desc()).first()
+            total_books = session.query(Book).count()
+            python_books = session.query(Book).filter(Book.title.like('%Python%')).count()
+            print(f'''
+            \n***** BOOK ANALYSIS *****
+            \rOldest Book: {oldest_book}
+            \rNewest Book: {newest_book}
+            \rTotal Books: {total_books}
+            \rNumber of Python Books: {python_books}
+            ''')
+            input('\nPress enter to return to the main menu.')
         else:
             print('GOODBYE')
             app_running = False
